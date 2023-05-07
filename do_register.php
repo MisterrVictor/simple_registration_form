@@ -11,14 +11,25 @@ if ($stmt->rowCount() > 0) {
     die; // Остановка выполнения скрипта
 }
 
-// Добавим пользователя в базу
+
+$username = isset($_POST['username']) ? $_POST['username'] : '';
+$username = htmlentities(filter_var($username, FILTER_SANITIZE_STRING));
+
+$phone = isset($_POST['phone']) ? $_POST['phone'] : '';
+$phone = htmlentities(filter_var($phone, FILTER_SANITIZE_NUMBER_INT));
+
+$email = isset($_POST['email']) ? $_POST['email'] : '';
+$email = htmlentities(filter_var($email, FILTER_SANITIZE_EMAIL));
+
+// Добавим пользователя в базу 
 $stmt = pdo()->prepare("INSERT INTO `users` (`name`, `password`, `phone`, `email`) "
         . "VALUES (:username, :password, :phone, :email)");
 $stmt->execute([
-    'username' => $_POST['username'],
+    'username' => $username,
     'password' => password_hash($_POST['password'], PASSWORD_DEFAULT),
-    'phone' => $_POST['phone'],
-    'email' => $_POST['email'],
+    'phone' => $phone,
+    'email' => $email,
 ]);
 
 header('Location: login.php');
+?>
